@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { mongoConfig } from './config/mongo.config';
+import { ClaimsModule } from './claims/claims.module';
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { mongoConfig } from './config/mongo.config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: mongoConfig
-    })
+    }),
+
+    ClaimsModule
   ],
   controllers: [],
   providers: [],
