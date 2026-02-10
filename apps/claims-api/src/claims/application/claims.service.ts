@@ -10,12 +10,12 @@ export class ClaimsService {
         @InjectModel(Claim.name) private claimModel: Model<ClaimDocument>,
     ) { }
 
-    async create(createClaimDto: CreateClaimDto): Promise<Claim> {
+    async createClaim(createClaimDto: CreateClaimDto): Promise<Claim> {
         const createdClaim = await this.claimModel.create(createClaimDto);
         return createdClaim;
     }
 
-    async findAll(): Promise<Claim[]> {
+    async getAllClaims(): Promise<Claim[]> {
         return this.claimModel.find().exec();
     }
 }
