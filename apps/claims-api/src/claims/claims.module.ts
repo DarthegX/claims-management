@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClaimsController } from './claims.controller';
-import { ClaimsService } from './claims.service';
+import { ClaimsService } from './application/claims.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Claim, ClaimSchema } from './domain/claim.entity';
+import { Claim, ClaimSchema } from './persistence/schemas/claim.schema';
 
 @Module({
   imports: [
