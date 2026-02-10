@@ -23,4 +23,4 @@ export class Damage {
     price: number;
 }
 
-export const DanmageSchema = SchemaFactory.createForClass(Damage);
+export const DamageSchema = SchemaFactory.createForClass(Damage);

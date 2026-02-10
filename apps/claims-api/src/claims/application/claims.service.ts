@@ -16,6 +16,9 @@ export class ClaimsService {
     }
 
     async getAllClaims(): Promise<Claim[]> {
-        return this.claimModel.find().exec();
+        return this.claimModel
+            .find()
+            .populate('damages')
+            .exec();
     }
 }
