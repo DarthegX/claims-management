@@ -1,3 +1,3 @@
 export const mongoConfig = () => ({
-    uri: process.env.MONGO_URI,
+    uri: process.env.MONGODB_URI,
 });
