@@ -1,0 +1,335 @@
+openapi: 3.0.3
+
+info:
+  title: Claims Management API
+  description: |
+    API for managing insurance claims and associated damages.
+    This contract is the source of truth for both backend and frontend
+    following Spec-Driven Development (SDD).
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+
+tags:
+  - name: Claims
+    description: Claims management
+  - name: Damages
+    description: Damages associated with a claim
+
+paths:
+
+  /claims:
+    get:
+      tags: [Claims]
+      summary: Get all claims
+      responses:
+        '200':
+          description: List of claims
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClaimSummary'
+
+    post:
+      tags: [Claims]
+      summary: Create a new claim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClaimRequest'
+      responses:
+        '201':
+          description: Claim created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /claims/{claimId}:
+    get:
+      tags: [Claims]
+      summary: Get claim detail
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+      responses:
+        '200':
+          description: Claim detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /claims/{claimId}/status:
+    patch:
+      tags: [Claims]
+      summary: Update claim status
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClaimStatusRequest'
+      responses:
+        '200':
+          description: Updated claim
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '400':
+          description: Business rule violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /claims/{claimId}/damages:
+    post:
+      tags: [Damages]
+      summary: Add a damage to a claim
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDamageRequest'
+      responses:
+        '201':
+          description: Damage added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '403':
+          description: Claim status does not allow damage modification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /claims/{claimId}/damages/{damageId}:
+    put:
+      tags: [Damages]
+      summary: Update a damage
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+        - $ref: '#/components/parameters/DamageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDamageRequest'
+      responses:
+        '200':
+          description: Damage updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    delete:
+      tags: [Damages]
+      summary: Remove a damage
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+        - $ref: '#/components/parameters/DamageId'
+      responses:
+        '200':
+          description: Damage removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+
+  parameters:
+    ClaimId:
+      name: claimId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    DamageId:
+      name: damageId
+      in: path
+      required: true
+      schema:
+        type: string
+
+  schemas:
+
+    ClaimSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/ClaimStatus'
+        totalAmount:
+          type: number
+      required: [id, title, status, totalAmount]
+
+    Claim:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/ClaimStatus'
+        totalAmount:
+          type: number
+        damages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Damage'
+      required:
+        - id
+        - title
+        - description
+        - status
+        - totalAmount
+        - damages
+
+    Damage:
+      type: object
+      properties:
+        id:
+          type: string
+        part:
+          type: string
+        severity:
+          $ref: '#/components/schemas/Severity'
+        imageUrl:
+          type: string
+          format: uri
+        price:
+          type: number
+          minimum: 0
+        score:
+          type: integer
+          minimum: 1
+          maximum: 10
+      required:
+        - id
+        - part
+        - severity
+        - imageUrl
+        - price
+        - score
+
+    CreateClaimRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      required: [title, description]
+
+    UpdateClaimStatusRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ClaimStatus'
+      required: [status]
+
+    CreateDamageRequest:
+      type: object
+      properties:
+        part:
+          type: string
+        severity:
+          $ref: '#/components/schemas/Severity'
+        imageUrl:
+          type: string
+          format: uri
+        price:
+          type: number
+        score:
+          type: integer
+          minimum: 1
+          maximum: 10
+      required:
+        - part
+        - severity
+        - imageUrl
+        - price
+        - score
+
+    UpdateDamageRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateDamageRequest'
+
+    ClaimStatus:
+      type: string
+      enum:
+        - Pending
+        - InReview
+        - Finished
+        - Canceled
+
+    Severity:
+      type: string
+      enum:
+        - Low
+        - Mid
+        - High
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        errorCode:
+          type: string
+      required: [message]
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Forbidden:
+      description: Operation not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
