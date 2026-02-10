@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { ClaimsService } from './application/claims.service';
 import { CreateClaimDto } from './dto/create-claim.dto';
 
@@ -15,5 +15,10 @@ export class ClaimsController {
     @Get()
     async findAll() {
         return await this.claimsService.getAllClaims();
+    }
+
+    @Get(':claimId')
+    async getClaimById(@Param('claimId') claimId: string) {
+        return await this.claimsService.findById(claimId);
     }
 }
