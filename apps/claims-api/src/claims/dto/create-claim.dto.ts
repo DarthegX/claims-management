@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateClaimDto {
     @IsString()
