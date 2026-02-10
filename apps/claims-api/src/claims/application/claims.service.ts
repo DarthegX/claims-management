@@ -21,4 +21,11 @@ export class ClaimsService {
             .populate('damages')
             .exec();
     }
+
+    async findById(id: string): Promise<Claim | null> {
+        return await this.claimModel
+            .findById(id)
+            .populate('damages')
+            .exec();
+    }
 }
