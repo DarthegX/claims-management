@@ -53,4 +53,8 @@ export class ClaimsService {
             .populate('damages')
             .exec();
     }
+
+    isDescriptionGreatherThan100(description: string) {
+        return description.length > 100;
+    }
 }
