@@ -1,10 +1,18 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Put } from '@nestjs/common';
 import { ClaimsService } from './application/claims.service';
 import { CreateClaimDto } from './dto/create-claim.dto';
+import { UpdateClaimDto } from './dto/update-claim.dto';
+import { DamagesService } from './application/damage.service';
+import { CreateDamageDto } from './dto/create-damage.dto';
+import { UpdateClaimStatusDto } from './dto/update-claim-status.dto';
+import { ClaimStatus } from './domain/claim-status.enum';
 
 @Controller('claims')
 export class ClaimsController {
-    constructor(private readonly claimsService: ClaimsService) { }
+    constructor(
+        private readonly claimsService: ClaimsService,
+        private readonly damageService: DamagesService
+    ) { }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
@@ -19,6 +27,58 @@ export class ClaimsController {
 
     @Get(':claimId')
     async getClaimById(@Param('claimId') claimId: string) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
         return await this.claimsService.findById(claimId);
+    }
+
+    @Patch(':claimId')
+    async updateClaimById(
+        @Param('claimId') claimId: string,
+        @Body() updateClaimDto: UpdateClaimDto
+    ) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
+        return await this.claimsService.updateClaim(claimId, updateClaimDto);
+    }
+
+    @Patch(':claimId/status')
+    async updateClaimStatus(
+        @Param('claimId') claimId: string,
+        @Body() updateClaimStatusDto: UpdateClaimStatusDto
+    ) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
+        if (this.damageService.findHighSeverityDamagesByClaim(claim.damages) &&
+            !this.claimsService.isDescriptionGreatherThan100(claim.description)
+        ) {
+            throw new ForbiddenException('The description must be al least 100 characters long.')
+        }
+
+        return await this.claimsService.updateStatus(claimId, updateClaimStatusDto);
+    }
+
+    @Post(':claimId/damage')
+    @HttpCode(HttpStatus.CREATED)
+    async addDamageToClaim(
+        @Param('claimId') claimId: string,
+        @Body() createDamageDto: CreateDamageDto
+    ) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
+        if (claim.status !== ClaimStatus.PENDING) throw new ForbiddenException('Cannot add damages to non pending claim');
+
+        const newDamageId = await this.damageService.createDamage(createDamageDto);
+
+        await this.claimsService.addDamage(claimId, newDamageId);
+
     }
 }

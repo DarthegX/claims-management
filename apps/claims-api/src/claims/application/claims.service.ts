@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateClaimDto } from '../dto/create-claim.dto';
 import { Claim, ClaimDocument } from '../persistence/schemas/claim.schema';
+import { UpdateClaimDto } from '../dto/update-claim.dto';
+import { UpdateClaimStatusDto } from '../dto/update-claim-status.dto';
 
 @Injectable()
 export class ClaimsService {
@@ -27,5 +29,32 @@ export class ClaimsService {
             .findById(id)
             .populate('damages')
             .exec();
+    }
+
+    async updateClaim(claimId: string, updateClaimDto: UpdateClaimDto): Promise<void> {
+        const updatedClaim = await this.claimModel.findByIdAndUpdate(claimId, updateClaimDto);
+        console.log('Update Claim: ' + this.updateClaim.toString());
+        return;
+    }
+
+    async updateStatus(claimId: string, status: UpdateClaimStatusDto): Promise<void> {
+        const updatedClaim = await this.claimModel.findByIdAndUpdate(claimId, status);
+        console.log('Update Status: ' + status);
+        return;
+    }
+
+    async addDamage(claimId: string, damageId: string) {
+        return await this.claimModel
+            .findByIdAndUpdate(
+                claimId,
+                { $push: { damages: damageId } },
+                { new: true },
+            )
+            .populate('damages')
+            .exec();
+    }
+
+    isDescriptionGreatherThan100(description: string) {
+        return description.length > 100;
     }
 }

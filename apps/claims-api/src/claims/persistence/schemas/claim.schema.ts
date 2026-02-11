@@ -1,7 +1,7 @@
-import { IsEnum, IsNumber, IsString, Min } from "class-validator";
+import { IsNumber, IsString, Min } from "class-validator";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from 'mongoose';
-import { ClaimStatus } from "src/claims/domain/claim-status.enum";
+import { ClaimStatus } from "../../domain/claim-status.enum";
 import { Damage } from "./damage.schema";
 
 export type ClaimDocument = HydratedDocument<Claim>;
