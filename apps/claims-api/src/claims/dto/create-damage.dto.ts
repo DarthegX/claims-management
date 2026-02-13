@@ -7,6 +7,9 @@ export class CreateDamageDto {
     @IsNotEmpty()
     part: string;
 
+    @IsString()
+    imageURL: string;
+
     @IsEnum(Severity)
     @IsNotEmpty()
     severity: Severity;
