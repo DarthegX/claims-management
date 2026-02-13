@@ -5,7 +5,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type DamageDocument = HydratedDocument<Damage>;
 
-@Schema({ timestamps: true, collection: 'damages' })
+@Schema({ timestamps: true, id: true, collection: 'damages' })
 export class Damage {
     @IsString()
     @Prop({ required: true })
