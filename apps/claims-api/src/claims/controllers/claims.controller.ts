@@ -22,7 +22,7 @@ export class ClaimsController {
     }
 
     @Get()
-    async findAll() {
+    async getAll() {
         return await this.claimsService.getAllClaims();
     }
 
@@ -77,10 +77,9 @@ export class ClaimsController {
 
         if (claim.status !== ClaimStatus.PENDING) throw new ForbiddenException('Cannot add damages to non pending claim');
 
-        const newDamageId = await this.damageService.createDamage(createDamageDto);
+        const newDamage = await this.damageService.createDamage(createDamageDto);
 
-        await this.claimsService.addDamage(claimId, newDamageId);
-
+        await this.claimsService.addDamage(claimId, newDamage._id.toString());
     }
 
     @Patch(':claimId/damage/:damageId')
