@@ -1,20 +1,21 @@
-import { IsEAN, IsEnum, IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Damage } from "../domain/damage.entity";
 import { Severity } from "../domain/severity.enum";
 import { Prop } from "@nestjs/mongoose";
 
-export class CreateDamageDto {
+export class UpdateDamageDto {
     @IsString()
     @IsNotEmpty()
     part: string;
 
     @IsString()
+    @IsNotEmpty()
     imageURL: string;
 
     @IsEnum(Severity)
-    @IsNotEmpty()
+    @Prop({ required: true })
     severity: Severity;
 
     @IsNumber()
-    @Min(0)
     price: number;
 }
