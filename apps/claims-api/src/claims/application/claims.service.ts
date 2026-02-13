@@ -46,7 +46,7 @@ export class ClaimsService {
             .findByIdAndUpdate(
                 claimId,
                 { $push: { damages: damageId } },
-                { new: true },
+                { returnDocument: 'after' },
             )
             .populate('damages')
             .exec();
