@@ -1,11 +1,12 @@
-import { Body, Controller, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Put } from '@nestjs/common';
-import { ClaimsService } from './application/claims.service';
-import { CreateClaimDto } from './dto/create-claim.dto';
-import { UpdateClaimDto } from './dto/update-claim.dto';
-import { DamagesService } from './application/damage.service';
-import { CreateDamageDto } from './dto/create-damage.dto';
-import { UpdateClaimStatusDto } from './dto/update-claim-status.dto';
-import { ClaimStatus } from './domain/claim-status.enum';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Put } from '@nestjs/common';
+import { ClaimsService } from '../application/claims.service';
+import { CreateClaimDto } from '../dto/create-claim.dto';
+import { UpdateClaimDto } from '../dto/update-claim.dto';
+import { DamagesService } from '../application/damage.service';
+import { CreateDamageDto } from '../dto/create-damage.dto';
+import { UpdateClaimStatusDto } from '../dto/update-claim-status.dto';
+import { ClaimStatus } from '../domain/claim-status.enum';
+import { UpdateDamageDto } from '../dto/update-damage.dto';
 
 @Controller('claims')
 export class ClaimsController {
@@ -80,5 +81,34 @@ export class ClaimsController {
 
         await this.claimsService.addDamage(claimId, newDamageId);
 
+    }
+
+    @Patch(':claimId/damage/:damageId')
+    @HttpCode(HttpStatus.CREATED)
+    async updateDamageOnClaim(
+        @Param('claimId') claimId: string,
+        @Param('damageId') damageId: string,
+        @Body() updateDamageDto: UpdateDamageDto
+    ) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
+        await this.damageService.updateDamage(damageId, updateDamageDto);
+    }
+
+    @Delete(':claimId/damage/:damageId')
+    @HttpCode(HttpStatus.CREATED)
+    async deleteDamageOnClaim(
+        @Param('claimId') claimId: string,
+        @Param('damageId') damageId: string,
+    ) {
+        const claim = await this.claimsService.findById(claimId);
+
+        if (!claim) throw new NotFoundException('Claim not found');
+
+        await this.claimsService.removeDamageFromClaim(claimId, damageId);
+
+        await this.damageService.deleteDamage(damageId);
     }
 }

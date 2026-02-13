@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ClaimsController } from './claims.controller';
+import { ClaimsController } from './controllers/claims.controller';
 import { ClaimsService } from './application/claims.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Claim, ClaimSchema } from './persistence/schemas/claim.schema';

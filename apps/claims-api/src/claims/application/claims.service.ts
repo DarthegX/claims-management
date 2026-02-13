@@ -33,13 +33,11 @@ export class ClaimsService {
 
     async updateClaim(claimId: string, updateClaimDto: UpdateClaimDto): Promise<void> {
         const updatedClaim = await this.claimModel.findByIdAndUpdate(claimId, updateClaimDto);
-        console.log('Update Claim: ' + this.updateClaim.toString());
         return;
     }
 
     async updateStatus(claimId: string, status: UpdateClaimStatusDto): Promise<void> {
         const updatedClaim = await this.claimModel.findByIdAndUpdate(claimId, status);
-        console.log('Update Status: ' + status);
         return;
     }
 
@@ -56,5 +54,16 @@ export class ClaimsService {
 
     isDescriptionGreatherThan100(description: string) {
         return description.length > 100;
+    }
+
+    async removeDamageFromClaim(claimId: string, damageId: string) {
+        return await this.claimModel
+            .findByIdAndUpdate(
+                claimId,
+                { $pull: { damages: damageId } },
+                { new: true },
+            )
+            .populate('damages')
+            .exec();
     }
 }
