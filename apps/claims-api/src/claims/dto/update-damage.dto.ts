@@ -1,5 +1,4 @@
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Damage } from "../domain/damage.entity";
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Severity } from "../domain/severity.enum";
 import { Prop } from "@nestjs/mongoose";
 
@@ -13,7 +12,7 @@ export class UpdateDamageDto {
     imageURL: string;
 
     @IsEnum(Severity)
-    @Prop({ required: true })
+    @Prop({ required: true, type: String })
     severity: Severity;
 
     @IsNumber()
