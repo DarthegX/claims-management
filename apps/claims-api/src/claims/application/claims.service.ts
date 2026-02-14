@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateClaimDto } from '../dto/create-claim.dto';
 import { Claim, ClaimDocument } from '../persistence/schemas/claim.schema';
 import { UpdateClaimDto } from '../dto/update-claim.dto';
 import { UpdateClaimStatusDto } from '../dto/update-claim-status.dto';
+import { TotalCalculator } from './total-calculator.strategy';
+import { Damage } from '../persistence/schemas/damage.schema';
 
 @Injectable()
 export class ClaimsService {
     constructor(
         @InjectModel(Claim.name) private claimModel: Model<ClaimDocument>,
+        @Inject('TotalCalculator') private readonly calculator: TotalCalculator
     ) { }
 
     async createClaim(createClaimDto: CreateClaimDto): Promise<Claim> {
@@ -42,14 +45,16 @@ export class ClaimsService {
     }
 
     async addDamage(claimId: string, damageId: string) {
-        return await this.claimModel
+        const updated = await this.claimModel
             .findByIdAndUpdate(
                 claimId,
                 { $push: { damages: damageId } },
-                { new: true },
+                { returnDocument: 'after' },
             )
             .populate('damages')
             .exec();
+
+        return this.updateTotalAmount(claimId, updated?.damages ?? []);
     }
 
     isDescriptionGreatherThan100(description: string) {
@@ -65,5 +70,16 @@ export class ClaimsService {
             )
             .populate('damages')
             .exec();
+    }
+
+    updateTotalAmount(claimId: string, damages: Damage[]) {
+        const updatedTotalAmount = this.recalculateTotalAmount(damages)
+
+        return this.claimModel
+            .findByIdAndUpdate(claimId, { totalAmount: updatedTotalAmount });
+    }
+
+    private recalculateTotalAmount(damages: Damage[]) {
+        return this.calculator.calculate(damages);
     }
 }

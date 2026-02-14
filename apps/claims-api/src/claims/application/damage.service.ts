@@ -11,10 +11,8 @@ import { UpdateDamageDto } from "../dto/update-damage.dto";
 export class DamagesService {
     constructor(@InjectModel(Damage.name) private damageModel: Model<DamageDocument>,) { }
 
-    async createDamage(damageDto: CreateDamageDto): Promise<string> {
-        const createdDamage = await this.damageModel.create(damageDto);
-
-        return createdDamage._id.toString();
+    async createDamage(damageDto: CreateDamageDto): Promise<DamageDocument> {
+        return await this.damageModel.create(damageDto);
     }
 
     findHighSeverityDamagesByClaim(damages: any[]): boolean {

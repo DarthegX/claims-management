@@ -6,7 +6,7 @@ import { Damage } from "./damage.schema";
 
 export type ClaimDocument = HydratedDocument<Claim>;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, id: true })
 export class Claim {
     @IsString()
     @Prop({ required: true })
