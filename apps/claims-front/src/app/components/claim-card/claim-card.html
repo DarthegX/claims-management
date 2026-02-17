@@ -1,0 +1,25 @@
+<div class="claim-card" [routerLink]="['/claims', claim.id]">
+    <div class="claim-card__main">
+        <div class="claim-card__header">
+            <span class="claim-card__status" [ngClass]="getStatusClass(claim.status)">
+                {{ claim.status }}
+            </span>
+            <span class="claim-card__id">#{{ claim.id }}</span>
+        </div>
+        <h3 class="claim-card__title">{{ claim.title }}</h3>
+
+        <div class="claim-card__stats">
+            <div class="claim-card__icon-box">
+                <!-- Icon Placeholder -->
+            </div>
+            <div class="claim-card__stats-info">
+                <div class="claim-card__stats-value">{{ claim.reportedDamagesCount }}</div>
+                <div class="claim-card__stats-label">Reported Damages</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="claim-card__footer">
+        <span class="claim-card__details-link">View Details</span>
+    </div>
+</div>
