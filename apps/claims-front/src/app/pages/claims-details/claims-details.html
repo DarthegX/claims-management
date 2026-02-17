@@ -1,0 +1,129 @@
+<div class="page-header">
+    <div class="page-header__container">
+        <a [routerLink]="['/claims']" class="page-header__back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="page-header__icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back
+        </a>
+        <div class="page-header__breadcrumb">
+            <svg xmlns="http://www.w3.org/2000/svg" class="page-header__icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+            </svg>
+            Claim #{{ claim?.id }}
+        </div>
+    </div>
+</div>
+
+<div class="details-container">
+    @if (claim) {
+    <!-- Main Info Card -->
+    <div class="claim-summary">
+        <div class="claim-summary__decoration"></div>
+
+        <div class="claim-summary__content">
+            <div class="claim-summary__meta">
+                <div class="claim-summary__status-group">
+                    <span class="claim-summary__status-badge" [ngClass]="getStatusClass(claim.status)">
+                        {{ claim.status }}
+                    </span>
+                    <div class="claim-summary__date">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="claim-summary__icon" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {{ claim.date }}
+                    </div>
+                </div>
+
+                <div class="claim-summary__impact">
+                    <p class="claim-summary__impact-label">Total Impact</p>
+                    <p class="claim-summary__impact-value">${{ claim.totalImpact }}</p>
+                </div>
+            </div>
+
+            <h1 class="claim-summary__title">{{ claim.title }}</h1>
+            <p class="claim-summary__description">
+                {{ claim.description }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Damage Assessment -->
+    <div class="assessment-header">
+        <h2 class="assessment-header__title">Damage Assessment</h2>
+        <button class="assessment-header__add-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="assessment-header__icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Add Damage
+        </button>
+    </div>
+
+    <div class="assessment-table-wrapper">
+        <table class="assessment-table">
+            <thead>
+                <tr class="assessment-table__header-row">
+                    <th class="assessment-table__header-cell">Component / Part</th>
+                    <th class="assessment-table__header-cell">Severity</th>
+                    <th class="assessment-table__header-cell">Evidence</th>
+                    <th class="assessment-table__header-cell assessment-table__header-cell--right">Est. Cost</th>
+                </tr>
+            </thead>
+            <tbody class="assessment-table__body">
+                @for (damage of claim.damages; track $index) {
+                <tr class="assessment-table__row">
+                    <td class="assessment-table__cell">
+                        <span class="assessment-table__part-name">{{ damage.part }}</span>
+                    </td>
+                    <td class="assessment-table__cell">
+                        <span class="assessment-table__severity-badge" [ngClass]="getSeverityClass(damage.severity)">
+                            {{ damage.severity }}
+                        </span>
+                    </td>
+                    <td class="assessment-table__cell">
+                        <a [href]="damage.evidenceUrl" class="assessment-table__evidence-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="assessment-table__icon" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            View Evidence
+                            <svg xmlns="http://www.w3.org/2000/svg" class="assessment-table__icon-external" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </td>
+                    <td class="assessment-table__cell assessment-table__cell--right">
+                        <span class="assessment-table__cost-value">${{ damage.estimatedCost }}</span>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot class="assessment-table__footer">
+                <tr class="assessment-table__footer-row">
+                    <td colspan="3" class="assessment-table__footer-label-cell">
+                        <span class="assessment-table__total-label">Total Estimation</span>
+                    </td>
+                    <td class="assessment-table__footer-value-cell">
+                        <span class="assessment-table__total-value">${{ claim.totalImpact }}</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    } @else {
+    <div class="empty-state">
+        <h2 class="empty-state__title">Claim not found</h2>
+        <a [routerLink]="['/claims']" class="empty-state__link">Return to dashboard</a>
+    </div>
+    }
+</div>
