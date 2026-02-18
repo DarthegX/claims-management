@@ -1,0 +1,59 @@
+<div class="modal-overlay">
+    <div class="modal-container">
+        <!-- Header -->
+        <div class="modal-header">
+            <h3 class="modal-header__title">Add New Damage</h3>
+            <button (click)="close()" class="modal-header__close-button">
+                <svg class="modal-header__close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="part" class="form-field__label">Affected Part</label>
+                    <input type="text" id="part" [(ngModel)]="damage.part" placeholder="e.g. Front Bumper"
+                        class="form-field__input">
+                </div>
+
+                <div class="form-field">
+                    <label for="severity" class="form-field__label">Severity</label>
+                    <select id="severity" [(ngModel)]="damage.severity" class="form-field__select">
+                        <option value="low">Low</option>
+                        <option value="mid">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="price" class="form-field__label">Repair Price (€)</label>
+                <div class="form-field__input-container">
+                    <span class="form-field__input-prefix">€</span>
+                    <input type="number" id="price" [(ngModel)]="damage.price" placeholder="0.00"
+                        class="form-field__input form-field__input--with-prefix">
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="imageURL" class="form-field__label">Image URL</label>
+                <input type="text" id="imageURL" [(ngModel)]="damage.imageURL"
+                    placeholder="https://example.com/damage-photo.jpg" class="form-field__input">
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button (click)="close()" class="modal-footer__cancel-button">
+                Cancel
+            </button>
+            <button (click)="submit()" [disabled]="!isValid()" class="modal-footer__submit-button">
+                Add Damage
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,225 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-container {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 32rem;
+    /* max-w-lg */
+    overflow: hidden;
+    transform-origin: bottom;
+    animation: slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(249, 250, 251, 0.5);
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 0;
+    }
+
+    &__close-button {
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 9999px;
+        border: none;
+        background: transparent;
+        transition: all 0.2s;
+
+        &:hover {
+            color: #4b5563;
+            background-color: #f3f4f6;
+        }
+    }
+
+    &__close-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+.modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* space-y-5 */
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    &__label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    &__input,
+    &__select {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        outline: none;
+        transition: all 0.2s;
+        font-size: 1rem;
+        background-color: #ffffff;
+
+        &::placeholder {
+            color: #9ca3af;
+        }
+
+        &:focus {
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #10b981;
+            /* emerald-500 */
+        }
+    }
+
+    &__input-container {
+        position: relative;
+    }
+
+    &__input-prefix {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 0.875rem;
+        pointer-events: none;
+    }
+
+    &__input--with-prefix {
+        padding-left: 2.25rem;
+        /* pl-9 roughly */
+    }
+}
+
+.preview {
+    margin-top: 0.5rem;
+    text-align: center;
+
+    &__image {
+        max-height: 8rem;
+        /* max-h-32 */
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 0.5rem;
+        border: 1px solid #f3f4f6;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        object-fit: cover;
+    }
+
+    &__error {
+        font-size: 0.75rem;
+        color: #ef4444;
+        margin-top: 0.25rem;
+    }
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: rgba(249, 250, 251, 0.5);
+
+    &__cancel-button {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4b5563;
+        border: none;
+        background: transparent;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            color: #1f2937;
+            background-color: #f3f4f6;
+        }
+    }
+
+    &__submit-button {
+        padding: 0.5rem 1.5rem;
+        background-color: #059669;
+        /* emerald-600 */
+        color: #ffffff;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1);
+
+        &:hover:not(:disabled) {
+            background-color: #047857;
+            /* emerald-700 */
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(2rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
