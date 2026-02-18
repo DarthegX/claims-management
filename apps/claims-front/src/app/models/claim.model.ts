@@ -1,20 +1,14 @@
-export type ClaimStatus = 'Pending' | 'In review' | 'Finished';
-export type Severity = 'LOW' | 'MID' | 'HIGH';
+import { Damage } from "./damage.model";
 
-export interface Damage {
-    part: string;
-    severity: Severity;
-    evidenceUrl: string;
-    estimatedCost: number;
-}
+export type ClaimStatus = 'Pending' | 'In review' | 'Finished';
 
 export interface Claim {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     status: ClaimStatus;
     date: string;
-    reportedDamagesCount: number;
     damages?: Damage[];
-    totalImpact: number;
+    totalAmount: number;
+    createdAt: string;
 }
