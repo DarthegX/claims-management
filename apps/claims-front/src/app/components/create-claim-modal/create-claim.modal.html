@@ -1,0 +1,39 @@
+<div class="modal-overlay">
+    <div class="modal-container">
+
+        <div class="modal-header">
+            <h3 class="modal-header__title">Create New Claim</h3>
+            <button (click)="dialogRef.close()" class="modal-header__close-button">
+                <svg class="modal-header__close-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+
+        <div class="modal-body">
+            <div class="form-field">
+                <label for="title" class="form-field__label">Claim Title</label>
+                <input type="text" id="title" [(ngModel)]="title" placeholder="e.g. Front Bump Accident"
+                    class="form-field__input">
+            </div>
+
+            <div class="form-field">
+                <label for="description" class="form-field__label">Description</label>
+                <textarea id="description" [(ngModel)]="description" rows="4"
+                    placeholder="Provide details about the incident..." class="form-field__textarea"></textarea>
+            </div>
+        </div>
+
+
+        <div class="modal-footer">
+            <button (click)="dialogRef.close()" class="modal-footer__cancel-button">
+                Cancel
+            </button>
+            <button (click)="submit()" [disabled]="!isValid()" class="modal-footer__submit-button">
+                Create Claim
+            </button>
+        </div>
+    </div>
+</div>
