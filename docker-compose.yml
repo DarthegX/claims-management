@@ -13,5 +13,37 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: claimspass123
 
+  backend:
+    build:
+      context: ./apps/claims-api
+      dockerfile: Dockerfile
+    container_name: claims-api
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://claims-mongo:27018/claims_db
+      NODE_ENV: development
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: claimspass123
+    volumes:
+      - ./apps/claims-api:/app
+      - /app/node_modules
+    command: npm run start
+
+  frontend:
+    build:
+      context: ./apps/claims-front
+      dockerfile: Dockerfile
+    container_name: claims-frontend
+    restart: always
+    ports:
+      - '4200:80'
+    depends_on:
+      - backend
+
+
 volumes:
   mongo_data:
