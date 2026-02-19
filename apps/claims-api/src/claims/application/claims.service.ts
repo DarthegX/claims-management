@@ -72,11 +72,13 @@ export class ClaimsService {
             .exec();
     }
 
-    updateTotalAmount(claimId: string, damages: Damage[]) {
+    async updateTotalAmount(claimId: string, damages: Damage[]) {
         const updatedTotalAmount = this.recalculateTotalAmount(damages)
 
-        return this.claimModel
-            .findByIdAndUpdate(claimId, { totalAmount: updatedTotalAmount });
+        return await this.claimModel
+            .findByIdAndUpdate(claimId, { totalAmount: updatedTotalAmount }, { returnDocument: 'after' })
+            .populate('damages')
+            .exec();
     }
 
     private recalculateTotalAmount(damages: Damage[]) {
