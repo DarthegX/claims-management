@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ClaimsService } from '../../src/claims/application/claims.service';
-import { Claim } from '../../src/claims/persistence/schemas/claim.schema';
-import { CreateClaimDto } from '../../src/claims/dto/create-claim.dto';
-import { UpdateClaimDto } from '../../src/claims/dto/update-claim.dto';
+import { ClaimsService } from '../../claims/application/claims.service';
+import { Claim } from '../../claims/persistence/schemas/claim.schema';
+import { CreateClaimDto } from '../../claims/dto/create-claim.dto';
+import { UpdateClaimDto } from '../../claims/dto/update-claim.dto';
 
 describe('ClaimsService', () => {
   let service: ClaimsService;

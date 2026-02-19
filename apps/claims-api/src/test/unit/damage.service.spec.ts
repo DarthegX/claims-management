@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DamagesService } from '../../src/claims/application/damage.service';
-import { Damage } from '../../src/claims/persistence/schemas/damage.schema';
-import { Severity } from '../../src/claims/domain/severity.enum';
+import { DamagesService } from '../../claims/application/damage.service';
+import { Damage } from '../../claims/persistence/schemas/damage.schema';
+import { Severity } from '../../claims/domain/severity.enum';
 
 describe('DamagesService', () => {
     let service: DamagesService;
