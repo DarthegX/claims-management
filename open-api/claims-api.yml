@@ -18,20 +18,19 @@ tags:
     description: Damages associated with a claim
 
 paths:
-
   /claims:
     get:
       tags: [Claims]
       summary: Get all claims
       responses:
-        '200':
+        "200":
           description: List of claims
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClaimSummary'
+                  $ref: "#/components/schemas/ClaimSummary"
 
     post:
       tags: [Claims]
@@ -41,128 +40,127 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClaimRequest'
+              $ref: "#/components/schemas/CreateClaimRequest"
       responses:
-        '201':
+        "201":
           description: Claim created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: "#/components/schemas/Claim"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /claims/{claimId}:
     get:
       tags: [Claims]
       summary: Get claim detail
       parameters:
-        - $ref: '#/components/parameters/ClaimId'
+        - $ref: "#/components/parameters/ClaimId"
       responses:
-        '200':
+        "200":
           description: Claim detail
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/Claim"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /claims/{claimId}/status:
     patch:
       tags: [Claims]
       summary: Update claim status
       parameters:
-        - $ref: '#/components/parameters/ClaimId'
+        - $ref: "#/components/parameters/ClaimId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClaimStatusRequest'
+              $ref: "#/components/schemas/UpdateClaimStatusRequest"
       responses:
-        '200':
+        "200":
           description: Updated claim
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '400':
+                $ref: "#/components/schemas/Claim"
+        "400":
           description: Business rule violation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /claims/{claimId}/damages:
     post:
       tags: [Damages]
       summary: Add a damage to a claim
       parameters:
-        - $ref: '#/components/parameters/ClaimId'
+        - $ref: "#/components/parameters/ClaimId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateDamageRequest'
+              $ref: "#/components/schemas/CreateDamageRequest"
       responses:
-        '201':
+        "201":
           description: Damage added
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '403':
+                $ref: "#/components/schemas/Claim"
+        "403":
           description: Claim status does not allow damage modification
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /claims/{claimId}/damages/{damageId}:
     put:
       tags: [Damages]
       summary: Update a damage
       parameters:
-        - $ref: '#/components/parameters/ClaimId'
-        - $ref: '#/components/parameters/DamageId'
+        - $ref: "#/components/parameters/ClaimId"
+        - $ref: "#/components/parameters/DamageId"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateDamageRequest'
+              $ref: "#/components/schemas/UpdateDamageRequest"
       responses:
-        '200':
+        "200":
           description: Damage updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+                $ref: "#/components/schemas/Claim"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
     delete:
       tags: [Damages]
       summary: Remove a damage
       parameters:
-        - $ref: '#/components/parameters/ClaimId'
-        - $ref: '#/components/parameters/DamageId'
+        - $ref: "#/components/parameters/ClaimId"
+        - $ref: "#/components/parameters/DamageId"
       responses:
-        '200':
+        "200":
           description: Damage removed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Claim'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+                $ref: "#/components/schemas/Claim"
+        "403":
+          $ref: "#/components/responses/Forbidden"
 
 components:
-
   parameters:
     ClaimId:
       name: claimId
@@ -179,7 +177,6 @@ components:
         type: string
 
   schemas:
-
     ClaimSummary:
       type: object
       properties:
@@ -188,7 +185,7 @@ components:
         title:
           type: string
         status:
-          $ref: '#/components/schemas/ClaimStatus'
+          $ref: "#/components/schemas/ClaimStatus"
         totalAmount:
           type: number
       required: [id, title, status, totalAmount]
@@ -203,13 +200,13 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/ClaimStatus'
+          $ref: "#/components/schemas/ClaimStatus"
         totalAmount:
           type: number
         damages:
           type: array
           items:
-            $ref: '#/components/schemas/Damage'
+            $ref: "#/components/schemas/Damage"
       required:
         - id
         - title
@@ -226,24 +223,19 @@ components:
         part:
           type: string
         severity:
-          $ref: '#/components/schemas/Severity'
+          $ref: "#/components/schemas/Severity"
         imageUrl:
           type: string
           format: uri
         price:
           type: number
           minimum: 0
-        score:
-          type: integer
-          minimum: 1
-          maximum: 10
       required:
         - id
         - part
         - severity
         - imageUrl
         - price
-        - score
 
     CreateClaimRequest:
       type: object
@@ -258,7 +250,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/ClaimStatus'
+          $ref: "#/components/schemas/ClaimStatus"
       required: [status]
 
     CreateDamageRequest:
@@ -267,26 +259,21 @@ components:
         part:
           type: string
         severity:
-          $ref: '#/components/schemas/Severity'
+          $ref: "#/components/schemas/Severity"
         imageUrl:
           type: string
           format: uri
         price:
           type: number
-        score:
-          type: integer
-          minimum: 1
-          maximum: 10
       required:
         - part
         - severity
         - imageUrl
         - price
-        - score
 
     UpdateDamageRequest:
       allOf:
-        - $ref: '#/components/schemas/CreateDamageRequest'
+        - $ref: "#/components/schemas/CreateDamageRequest"
 
     ClaimStatus:
       type: string
@@ -294,7 +281,6 @@ components:
         - Pending
         - InReview
         - Finished
-        - Canceled
 
     Severity:
       type: string
@@ -318,18 +304,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
 
     Forbidden:
       description: Operation not allowed
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
 
     NotFound:
       description: Resource not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
