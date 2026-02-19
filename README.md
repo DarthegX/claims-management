@@ -2,6 +2,12 @@
 
 ## Commands to init
 
+### Run app dockerized
+```
+    # From root of repo init all services
+    docker-compose up docker-compose.yml
+```
+
 ### Run app locally
 ```
     # From root of repo init API
@@ -14,11 +20,7 @@
     docker-compose up docker-compose-db.yml
 ```
 
-### Run app dockerized (WIP)
-```
-    # From root of repo init all services
-    docker-compose up docker-compose.yml
-```
+
 
 ## To run unit tests coverage
 ```
