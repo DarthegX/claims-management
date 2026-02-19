@@ -65,7 +65,7 @@ export class ClaimsController {
         return await this.claimsService.updateStatus(claimId, updateClaimStatusDto);
     }
 
-    @Post(':claimId/damage')
+    @Post(':claimId/damages')
     @HttpCode(HttpStatus.CREATED)
     async addDamageToClaim(
         @Param('claimId') claimId: string,
@@ -79,11 +79,11 @@ export class ClaimsController {
 
         const newDamage = await this.damageService.createDamage(createDamageDto);
 
-        await this.claimsService.addDamage(claimId, newDamage._id.toString());
+        return await this.claimsService.addDamage(claimId, newDamage._id.toString());
     }
 
-    @Patch(':claimId/damage/:damageId')
-    @HttpCode(HttpStatus.CREATED)
+    @Patch(':claimId/damages/:damageId')
+    @HttpCode(HttpStatus.OK)
     async updateDamageOnClaim(
         @Param('claimId') claimId: string,
         @Param('damageId') damageId: string,
@@ -93,11 +93,11 @@ export class ClaimsController {
 
         if (!claim) throw new NotFoundException('Claim not found');
 
-        await this.damageService.updateDamage(damageId, updateDamageDto);
+        return await this.damageService.updateDamage(damageId, updateDamageDto);
     }
 
-    @Delete(':claimId/damage/:damageId')
-    @HttpCode(HttpStatus.CREATED)
+    @Delete(':claimId/damages/:damageId')
+    @HttpCode(HttpStatus.NO_CONTENT)
     async deleteDamageOnClaim(
         @Param('claimId') claimId: string,
         @Param('damageId') damageId: string,
@@ -108,6 +108,6 @@ export class ClaimsController {
 
         await this.claimsService.removeDamageFromClaim(claimId, damageId);
 
-        await this.damageService.deleteDamage(damageId);
+        return await this.damageService.deleteDamage(damageId);
     }
 }

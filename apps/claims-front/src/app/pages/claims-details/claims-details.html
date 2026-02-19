@@ -13,36 +13,39 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M4 6h16M4 10h16M4 14h16M4 18h16" />
             </svg>
-            Claim #{{ claim?.id }}
+            Claim #{{ claim()?._id }}
         </div>
     </div>
 </div>
 
 <div class="details-container">
-    @if (claim) {
-    <!-- Main Info Card -->
+    @if (claim(); as claim) {
+
     <div class="claim-summary">
         <div class="claim-summary__decoration"></div>
 
         <div class="claim-summary__content">
             <div class="claim-summary__meta">
                 <div class="claim-summary__status-group">
-                    <span class="claim-summary__status-badge" [ngClass]="getStatusClass(claim.status)">
-                        {{ claim.status }}
-                    </span>
+                    <select [ngModel]="claim.status" (ngModelChange)="onStatusChange($event)"
+                        class="claim-summary__status-badge" [ngClass]="getStatusClass(claim.status)">
+                        @for (status of availableStatuses; track status) {
+                        <option [value]="status">{{ getStatusTag(status) }}</option>
+                        }
+                    </select>
                     <div class="claim-summary__date">
                         <svg xmlns="http://www.w3.org/2000/svg" class="claim-summary__icon" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        {{ claim.date }}
+                        Created at {{ claim.createdAt }}
                     </div>
                 </div>
 
                 <div class="claim-summary__impact">
                     <p class="claim-summary__impact-label">Total Impact</p>
-                    <p class="claim-summary__impact-value">${{ claim.totalImpact }}</p>
+                    <p class="claim-summary__impact-value">{{ claim.totalAmount }}€</p>
                 </div>
             </div>
 
@@ -56,7 +59,7 @@
     <!-- Damage Assessment -->
     <div class="assessment-header">
         <h2 class="assessment-header__title">Damage Assessment</h2>
-        <button class="assessment-header__add-button">
+        <button class="assessment-header__add-button" (click)="openCreateDamageDialog()">
             <svg xmlns="http://www.w3.org/2000/svg" class="assessment-header__icon" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -73,7 +76,7 @@
                     <th class="assessment-table__header-cell">Component / Part</th>
                     <th class="assessment-table__header-cell">Severity</th>
                     <th class="assessment-table__header-cell">Evidence</th>
-                    <th class="assessment-table__header-cell assessment-table__header-cell--right">Est. Cost</th>
+                    <th class="assessment-table__header-cell assessment-table__header-cell--right">Price</th>
                 </tr>
             </thead>
             <tbody class="assessment-table__body">
@@ -88,7 +91,7 @@
                         </span>
                     </td>
                     <td class="assessment-table__cell">
-                        <a [href]="damage.evidenceUrl" class="assessment-table__evidence-link">
+                        <a [href]="damage.imageURL" target="_blank" class="assessment-table__evidence-link">
                             <svg xmlns="http://www.w3.org/2000/svg" class="assessment-table__icon" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -103,7 +106,7 @@
                         </a>
                     </td>
                     <td class="assessment-table__cell assessment-table__cell--right">
-                        <span class="assessment-table__cost-value">${{ damage.estimatedCost }}</span>
+                        <span class="assessment-table__cost-value">{{ damage.price }}€</span>
                     </td>
                 </tr>
                 }
@@ -114,7 +117,7 @@
                         <span class="assessment-table__total-label">Total Estimation</span>
                     </td>
                     <td class="assessment-table__footer-value-cell">
-                        <span class="assessment-table__total-value">${{ claim.totalImpact }}</span>
+                        <span class="assessment-table__total-value">{{ claim.totalAmount }}€</span>
                     </td>
                 </tr>
             </tfoot>
